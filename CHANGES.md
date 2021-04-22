@@ -2,6 +2,125 @@
 # Revision History #
 
 
+## Version 1.6  --  October 2020 ##
+
+
+### New Build Procedure: ###
+
+
+- Rather than trying to keep a bunch of different platform specific Makefiles in sync, "cmake" is now used for greater portability and easier maintenance.  This was contributed by Davide Gerhard.
+
+- README.md has a quick summary of the process.  More details in the ***User Guide***.
+
+
+### New Features: ###
+
+
+- "-X" option enables FX.25 transmission.  FX.25 reception is always enabled so you don't need to do anything special.  "What is FX.25?" you might ask.  It is forward error correction (FEC) added in a way that is completely compatible with an ordinary AX.25 frame.  See new document ***AX25\_plus\_FEC\_equals\_FX25.pdf*** for details.
+
+- Receive AIS location data from ships.  Enable by using "-B AIS" command line option or "MODEM AIS" in the configuration file.  AIS NMEA sentences are encapsulated in APRS user-defined data with a "{DA" prefix.  This uses 9600 bps so you need to use wide band audio, not what comes out of the speaker.  There is also a "-A" option to generate APRS Object Reports.
+
+- Receive Emergency Alert System (EAS) Specific Area Message Encoding (SAME).  Enable by using "-B EAS" command line option or "MODEM EAS" in the configuration file.  EAS SAME messages are encapsulated in APRS user-defined data with a "{DE" prefix.  This uses low speed AFSK so speaker output is fine.
+
+- "-t" option now accepts more values to accommodate inconsistent handling of text color control codes by different terminal emulators.  The default, 1, should work with most modern terminal types.  If the colors are not right, try "-t 9" to see the result of the different choices and pick the best one.  If none of them look right, file a bug report and specify: operating system version (e.g. Raspbian Buster), terminal emulator type and version (e.g.  LXTerminal 0.3.2).   Include a screen capture.
+
+
+- "-g" option to force G3RUH mode for lower speeds where a different modem type may be the default.
+
+- 2400 bps compatibility with MFJ-2400.  See ***2400-4800-PSK-for-APRS-Packet-Radio.pdf*** for details
+
+- "atest -h" will display the frame in hexadecimal for closer inspection.
+
+- Add support for Multi-GNSS NMEA sentences.
+
+
+
+### Bugs Fixed: ###
+
+- Proper counting of frames in transmit queue for AGW protocol 'Y' command.
+
+
+
+### New Documentation: ###
+
+- ***AX.25 + FEC = FX.25***
+
+- ***AIS Reception***
+
+- ***AX.25 Throughput: Why is 9600 bps Packet Radio only twice as fast as 1200?***
+
+- [***Ham Radio of Things (HRoT) - IoT over Ham Radio***](https://github.com/wb2osz/hrot)
+
+- [***EAS SAME to APRS Message Converter***](https://github.com/wb2osz/eas2aprs)
+
+- [***Dire Wolf PowerPoint Slide Show***](https://github.com/wb2osz/direwolf-presentation)
+
+### Notes: ###
+
+The Windows binary distribution now uses gcc (MinGW) version 7.4.0.
+The Windows version is built for both 32 and 64 bit operating systems.
+Use the 64 bit version if possible; it runs considerably faster.
+
+
+
+## Version 1.5  --  September 2018 ##
+
+
+### New Features: ###
+
+- PTT using GPIO pin of CM108/CM119 (e.g. DMK URI, RB-USB RIM), Linux only.
+
+- More efficient error recovery for AX.25 connected mode.  Better generation and processing of REJ and SREJ to reduce unnecessary duplicate "**I**" frames.
+
+- New configuration option, "**V20**", for listing stations known to not understand AX.25 v2.2.  This will speed up connection by going right to SABM and not trying SABME first and failing.
+
+- New "**NOXID**" configuration file option to avoid sending XID command to listed station(s).  If other end is a partial v2.2 implementation, which recognizes SABME, but not XID, we would waste a lot of time resending XID many times before giving up.   This is less drastic than the "**V20**" option which doesn't even attempt to use v2.2 with listed station(s).
+
+- New application "**kissutil**" for troubleshooting a KISS TNC or interfacing to an application via files.
+
+- KISS "Set Hardware" command to report transmit queue length.
+
+- TCP KISS can now handle multiple concurrent applications.
+
+- Linux can use serial port for KISS in addition to a pseudo terminal.
+
+- decode_aprs utility can now accept KISS frames and AX.25 frames as series of two digit hexadecimal numbers.
+
+- Full Duplex operation.  (Put "FULLDUP ON" in channel section of configuration file.)
+
+- Time slots for beaconing.
+
+- Allow single log file with fixed name rather than starting a new one each day.
+
+
+
+### Bugs Fixed: ###
+
+- Possible crash when CDIGIPEAT did not include the optional alias.
+
+- PACLEN configuration item no longer restricts length of received frames.
+
+- Strange failures when trying to use multiple KISS client applications over TCP.  Only Linux was affected.  
+
+- Under certain conditions, outgoing connected mode data would get stuck in a queue and not be transmitted.  This could happen if client application sends a burst of data larger than the "window" size (MAXFRAME or EMAXFRAME option).
+
+
+- Little typographical / spelling errors in messages.
+
+
+### Documentation: ###
+
+
+- New document ***Bluetooth-KISS-TNC.pdf*** explaining how to use KISS over Bluetooth.
+
+- Updates describing cheap SDR frequency inaccuracy and how to compensate for it.
+
+### Notes: ###
+
+Windows binary distribution now uses gcc (MinGW) version 6.3.0.
+
+----------
+
 ## Version 1.4  -- April 2017 ##
 
 
